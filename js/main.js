@@ -1,13 +1,16 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
-import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { G_image_loader } from './texture_loader.js';
 import { G_font_loader } from './font_loader.js';
+import { FontLoader }  from 'three/addons/loaders/FontLoader.js';
 
 //------------------ Create scene ------------------//
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -17,9 +20,19 @@ camera.position.set(0, 0, 0);
 camera.lookAt(0, 0, 0);
 camera.position.z = 10;
 
+//------------------ Create controls ------------------//
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target = new THREE.Vector3(0, 0,-40);
+controls.update();
+
+//------------------ Create light ------------------//
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+const light = new THREE.PointLight(0xff66660, 1, 100);
+scene.add(light);
 
 //------------------ Create cube ------------------//
-const geometry = new THREE.BoxGeometry(10, 10, 0);
+const geometry = new THREE.BoxGeometry(1, 1, 0);
 const geometry2 = new THREE.BoxGeometry(1, 1, 0);
 const material = G_image_loader('../img/logo_ECA.png');
 const material2 = G_image_loader('../img/logo_ECA.png');
@@ -30,50 +43,26 @@ scene.add(cube2);
 
 
 //------------------ Create Text ------------------//
-const font = G_font_loader('../font/Roboto_Regular.json');
-const text1 = new TextGeometry(
-    "Hello World",
-    {
-        font: font,
-        size: 1,
-        height: 0.1,
-        curveSegments: 12,
-        bevelEnabled: false,
-        bevelThickness: 0.1,
-        bevelSize: 0.1,
-        bevelOffset: 0,
-        bevelSegments: 5
-    }
-);
-const text2 = new TextGeometry(
-    "Hello World",
-    {
-        font: font,
-        size: 1,
-        height: 0.1,
-        curveSegments: 12,
-        bevelEnabled: false,
-        bevelThickness: 0.1,
-        bevelSize: 0.1,
-        bevelOffset: 0,
-        bevelSegments: 5
-    }
-);
+const loader = new FontLoader();
 
-text1.computeBoundingBox();
-text2.computeBoundingBox();
+loader.load('../fonts/Akira.json', function (font) {
+    const textgeo = new TextGeometry('Hello World', {
+        font: font
+    })
 
-const text1_mesh = new THREE.Mesh(text1, material);
-const text2_mesh = new THREE.Mesh(text2, material);
-
-scene.add(text1_mesh);
-scene.add(text2_mesh);
-
-text1_mesh.position.x = -2.5;
-text1_mesh.rotation.y = 0.5;
-text2_mesh.position.x = 2.5;
-text2_mesh.position.z = -10;
-text2_mesh.rotation.y = -0.5;
+    const textmesh = new THREE.Mesh(textgeo,
+        new THREE.MeshPhongMaterial({ color: 0x00ff00 }),
+        new THREE.MeshBasicMaterial({ color: 0x0000ff  })
+    )
+    textmesh.castShadow = true;
+    textmesh.position.y = -1;
+    textmesh.rotation.y = 0.5;
+    textmesh.scale.z = 0.005;
+    textmesh.scale.x = 0.005;
+    textmesh.scale.y = 0.005;
+    
+    scene.add(textmesh);
+});
 
 
 //Cube 1
@@ -89,7 +78,6 @@ cube2.position.z = -10;
 //------------------ Animation ------------------//
 function animate() {
     requestAnimationFrame(animate);
-console.log(".");
     TWEEN.update();
 
     render();
@@ -124,11 +112,11 @@ addEventListener('mousewheel', function (event) {
         if (!animation_camera.isPlaying()) {
 
             if (event.deltaY > 0 && camera.position.z < camera_z_max) {
-                animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z+10 }, move_time)
+                animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z + 10 }, move_time)
                     .easing(TWEEN.Easing.Quadratic.InOut).start();
             }
-            else if (event.deltaY < 0 && camera.position.z > camera_z_min){
-                animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z-10 }, move_time)
+            else if (event.deltaY < 0 && camera.position.z > camera_z_min) {
+                animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z - 10 }, move_time)
                     .easing(TWEEN.Easing.Quadratic.InOut).start();
             }
         }
