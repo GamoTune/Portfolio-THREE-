@@ -13,6 +13,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+const vector = new THREE.Vector3();
 
 //------------------ Create camera ------------------//
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
@@ -20,16 +21,10 @@ camera.position.set(0, 0, 0);
 camera.lookAt(0, 0, 0);
 camera.position.z = 10;
 
-//------------------ Create controls ------------------//
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target = new THREE.Vector3(0, 0,-40);
-controls.update();
 
 //------------------ Create light ------------------//
-scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+scene.add(new THREE.AmbientLight(0xffffff));
 
-const light = new THREE.PointLight(0xff66660, 1, 100);
-scene.add(light);
 
 //------------------ Create cube ------------------//
 const geometry = new THREE.BoxGeometry(1, 1, 0);
@@ -52,12 +47,14 @@ loader.load('../fonts/Akira.json', function (font) {
 
     const textmesh = new THREE.Mesh(textgeo,
         new THREE.MeshPhongMaterial({ color: 0x00ff00 }),
-        new THREE.MeshBasicMaterial({ color: 0x0000ff  })
+        //new THREE.MeshBasicMaterial({ color: 0x0000ff })
     )
     textmesh.castShadow = true;
     textmesh.position.y = -1;
+    textmesh.position.x = -2.5;
+    console.log(new THREE.Box3().setFromObject(textmesh).getSize(vector));
     textmesh.rotation.y = 0.5;
-    textmesh.scale.z = 0.005;
+    textmesh.scale.z = 0.000;
     textmesh.scale.x = 0.005;
     textmesh.scale.y = 0.005;
     
