@@ -43,20 +43,20 @@ const loader = new FontLoader();
 loader.load('../fonts/Akira.json', function (font) {
     const textgeo = new TextGeometry('Hello World', {
         font: font
-    })
-
+    });
     const textmesh = new THREE.Mesh(textgeo,
         new THREE.MeshPhongMaterial({ color: 0x00ff00 }),
         //new THREE.MeshBasicMaterial({ color: 0x0000ff })
     )
     textmesh.castShadow = true;
     textmesh.position.y = -1;
-    textmesh.position.x = -2.5;
-    console.log(new THREE.Box3().setFromObject(textmesh).getSize(vector));
+    textmesh.position.x = -2.5-3;
+    
     textmesh.rotation.y = 0.5;
     textmesh.scale.z = 0.000;
     textmesh.scale.x = 0.005;
     textmesh.scale.y = 0.005;
+    console.log(new THREE.Box3().setFromObject(textmesh).getSize(vector));
     
     scene.add(textmesh);
 });
