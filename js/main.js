@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerH
 camera.position.set(0, 0, 0);
 camera.lookAt(0, 0, 0);
 camera.position.z = 10;
-
+camera.fov = 30*2560/window.innerWidth;
 
 //------------------ Create light ------------------//
 scene.add(new THREE.AmbientLight(0xffffff));
@@ -51,8 +51,10 @@ function render() {
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
     camera.aspect = (window.innerWidth / window.innerHeight)
+    camera.fov = 30*2560/window.innerWidth;
     camera.updateProjectionMatrix()
     renderer.setSize(window.innerWidth, window.innerHeight)
+    
     render()
 }
 
