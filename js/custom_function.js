@@ -80,7 +80,7 @@ export function create_backgound_orbs(){
         const orb = new THREE.Sprite(material);
         orb.position.x = Math.random() * 60 - 30;
         orb.position.y = Math.random() * 30 - 15;
-        orb.position.z = -50;
+        orb.position.z = -100;
         orb.scale.x = orb.scale.y = Math.random() * 40 - 20;;
         group_orbs.add(orb);
     }
