@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
-import { move_project_items, create_new_project_item, create_backgound_orbs, animate_orbs } from './custom_function.js';
+
+import {
+    move_camera,
+    create_new_project_item,
+    create_backgound_orbs,
+    get_inter_object,
+    onPointerMove
+} from './custom_function.js';
+
 import { lst_projects } from '../data/lst_projects.js';
 
 
@@ -50,18 +58,7 @@ function animate() {
 //------------------ Render ------------------//
 var selectedObject = null;
 function render() {
-    // update the picking ray with the camera and pointer position
-    raycaster.setFromCamera(pointer, camera);
-
-    // calculate objects intersecting the picking ray
-    const intersects = raycaster.intersectObjects(scene.children);
-    if (intersects.length > 0) {
-        if (intersects[0].object.name == "project") {
-            selectedObject = intersects[0].object;
-        } else {
-            selectedObject = null;
-        }
-    }
+    selectedObject = get_inter_object(camera,scene);
     renderer.render(scene, camera)
 }
 
@@ -70,36 +67,30 @@ function render() {
 function check_window_ratio() {
     if (window.innerWidth / window.innerHeight < 1.8) {
         //Affiche le message que la page n'est pas optimisé pour le ratio de l'écran
-
     }
 }
 
-
 //------------------ Mouse ------------------//
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
 
-function onPointerMove(event) {
 
-    // calculate pointer position in normalized device coordinates
-    // (-1 to +1) for both components
 
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-}
+
+
+
 window.addEventListener('pointermove', onPointerMove);
 
 window.addEventListener('click', function (event) {
-    if (selectedObject) {
-        // selectedObject.material.color.set(0xff0000);
-        // console.log(selectedObject.position.z);
-        camera.position.z = selectedObject.position.z + 10;
+    if (selectedObject != null) {
+        console.log(selectedObject.position.z);
+        move_camera(camera, selectedObject.position.z-camera.position.z+10);
     }
+    
 });
 
 //------------------ Window Resize ------------------//
 window.addEventListener('resize', onWindowResize, false)
+
 function onWindowResize() {
     camera.aspect = (window.innerWidth / window.innerHeight)
     camera.updateProjectionMatrix()
@@ -113,13 +104,11 @@ function onWindowResize() {
 addEventListener('mousewheel', function (event) {
     if (event.deltaY < 0) {
         //scroll up
-        // move_project_items(group, 1);
-        camera.position.z += 1;
+        move_camera(camera, -10);
     }
     else if (event.deltaY > 0) {
         //scroll down
-        // move_project_items(group, -1);
-        camera.position.z -= 1;
+        move_camera(camera, 10);
     }
 });
 
