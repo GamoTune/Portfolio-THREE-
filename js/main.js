@@ -75,11 +75,13 @@ function onWindowResize() {
 addEventListener('mousewheel', function (event) {
     if (event.deltaY < 0) {
         //scroll up
-        move_project_items(group, 1);
+       // move_project_items(group, 1);
+       camera.position.z+=1;
     }
     else if (event.deltaY > 0) {
         //scroll down
-        move_project_items(group, -1);
+       // move_project_items(group, -1);
+       camera.position.z-=1;
     }
 });
 

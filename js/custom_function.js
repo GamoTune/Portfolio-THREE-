@@ -72,15 +72,19 @@ export function create_new_project_item(project) {
 }
 export function create_backgound_orbs(){
     const group_orbs = new THREE.Group();
-    for(var i = 0; i < 60; i++){
+    for(var i = 0; i < 100; i++){
         
         const map = new THREE.TextureLoader().load(orb_image);
+       
+        var coul_b = 0.5+0.5*Math.random(); 
+        var coul_rv =0.1*Math.random(); 
+        const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(coul_rv,coul_rv,coul_b), transparent: true });
 
-        const material = new THREE.SpriteMaterial({ map: map, color: Math.random() * 0x808008 + 0x808080, transparent: true });
+        //const material = new THREE.SpriteMaterial({ map: map, color: Math.random() * 0x808008 + 0x808080, transparent: true });
         const orb = new THREE.Sprite(material);
-        orb.position.x = Math.random() * 60 - 30;
+        orb.position.x = Math.random() * 100 - 50;
         orb.position.y = Math.random() * 30 - 15;
-        orb.position.z = -50;
+        orb.position.z = Math.random() * -100 - 50;
         orb.scale.x = orb.scale.y = Math.random() * 40 - 20;;
         group_orbs.add(orb);
     }
