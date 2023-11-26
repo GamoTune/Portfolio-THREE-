@@ -68,8 +68,10 @@ export function create_new_project_item(project) {
     cube.position.z = pos_z;
     cube.rotation.y = rota_y;
     cube.position.x = pos_x;
+    cube.name = "project"
     return cube;
 }
+
 export function create_backgound_orbs(){
     const group_orbs = new THREE.Group();
     for(var i = 0; i < 100; i++){
@@ -91,6 +93,7 @@ export function create_backgound_orbs(){
 
     return group_orbs;
 }
+
 export function create_backgound_orbsORG(){
     const group_orbs = new THREE.Group();
     for(var i = 0; i < nbr_line; i++){
