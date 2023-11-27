@@ -35,7 +35,6 @@ export function image_loader(path) {
 
 export function move_camera(camera, distance) {
 
-    
 
     if (animation_camera != null) {
 
@@ -65,9 +64,12 @@ export function move_camera(camera, distance) {
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
-    if (animation_camera.isPlaying()) {
-        project_on = what_is_project_on(camera.position.z);
-        if (project_on != null){
+    if (animation_camera != null) {
+        if (animation_camera.isPlaying()) {
+            project_on = what_is_project_on(camera.position.z);
+        }
+        if (project_on != null) {
+            console.log(project_on.color); // Y A UN BUG ICI AVEC LES COULEURS. En gros, la marche arrière ne marche pas et quand on arrive sur le dernier bah il prend la couleur du premier.
             change_orb_color(project_on.color);
         }
     }
@@ -94,7 +96,7 @@ export function create_projects_cards(project) {
 }
 
 export function create_backgound_orbs() {
-    
+
     for (var i = 0; i < orb_nubmer; i++) {
 
         const map = new THREE.TextureLoader().load(orb_image);
@@ -103,14 +105,13 @@ export function create_backgound_orbs() {
         var coul_g = 0.5 + 0.5 * Math.random();
         var coul_b = 0.5 + 0.5 * Math.random();
         var coul_rv = 0.1 * Math.random();
-        const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(coul_rv, coul_rv, coul_b), transparent: true });
+        const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(coul_r, 0, coul_b), transparent: true });
 
-        //const material = new THREE.SpriteMaterial({ map: map, color: Math.random() * 0x808008 + 0x808080, transparent: true });
         const orb = new THREE.Sprite(material);
         orb.position.x = Math.random() * 80 - 40;
         orb.position.y = Math.random() * 40 - 20;
         orb.position.z = Math.random() * - 100 - 50;
-        orb.scale.x = orb.scale.y = Math.random() * 40 - 20;;
+        orb.scale.x = orb.scale.y = Math.random() * 40 - 20;
         group_orbs.add(orb);
     }
 
@@ -144,23 +145,31 @@ export function onPointerMove(event) {
 }
 
 function change_orb_color(color) {
+
+    var coul_r = [], coul_b = [], coul_g = [];
+    for (var c = 0; c < group_orbs.children.length; c++) {
+        coul_r.push(color[0] * Math.random());
+        coul_g.push(color[1] * Math.random());
+        coul_b.push(color[2] * Math.random());
+    }
+
     if (animation_orbs_color != null) {
         if (!animation_orbs_color.isPlaying()) {
-            for(var i = 0; i < group_orbs.children.length; i++){
-                animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: color[0], g: color[1], b: color[2] }, move_time)
+            for (var i = 0; i < group_orbs.children.length; i++) {
+                animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time)
                     .easing(TWEEN.Easing.Quadratic.InOut).start();
             }
         }
     }
     else {
-        for(var i = 0; i < group_orbs.children.length; i++){
-            animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: color[0], g: color[1], b: color[2] }, move_time)
+        for (var i = 0; i < group_orbs.children.length; i++) {
+            animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
 }
 
-function what_is_project_on(z){
+function what_is_project_on(z) {
     for (var i = 0; i < lst_projects.length; i++) {
         if (z == lst_projects[i].id * 10) {
             return lst_projects[i];
@@ -169,6 +178,6 @@ function what_is_project_on(z){
 
 }
 
-function random_color(color){
+function random_color(color) {
 
 }
