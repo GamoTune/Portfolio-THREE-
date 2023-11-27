@@ -3,7 +3,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 
 import {
     move_camera,
-    create_new_project_item,
+    create_projects_cards,
     create_backgound_orbs,
     get_inter_object,
     onPointerMove
@@ -37,7 +37,7 @@ scene.add(new THREE.AmbientLight(0xffffff));
 const group = new THREE.Group();
 
 for (var i = 0; i < lst_projects.length; i++) {
-    group.add(create_new_project_item(lst_projects[i]));
+    group.add(create_projects_cards(lst_projects[i]));
 }
 
 scene.add(group);

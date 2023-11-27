@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { lst_projects } from '../data/lst_projects.js';
-import exp from 'constants';
 
 var animation_camera = null;
 var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
 const move_time = 1500;
+
+var project_on = null;
 
 var pos_x = 3;
 var rota_y = 0;
@@ -15,9 +16,10 @@ var pos_z = 0;
 var WindowWidth = window.innerWidth;
 var WindowHeight = window.innerHeight;
 
+const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
-const nbr_line = 20;
-const nbr_column = 20;
+const orb_nubmer = 150;
+var animation_orbs_color = null;
 
 var selectedObject = null;
 const pointer = new THREE.Vector2();
@@ -32,6 +34,8 @@ export function image_loader(path) {
 }
 
 export function move_camera(camera, distance) {
+
+    
 
     if (animation_camera != null) {
 
@@ -61,9 +65,15 @@ export function move_camera(camera, distance) {
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
+    if (animation_camera.isPlaying()) {
+        project_on = what_is_project_on(camera.position.z);
+        if (project_on != null){
+            change_orb_color(project_on.color);
+        }
+    }
 }
 
-export function create_new_project_item(project) {
+export function create_projects_cards(project) {
     if (project.id % 2 == 0) {
         pos_x = 3;
         rota_y = -0.5;
@@ -84,52 +94,27 @@ export function create_new_project_item(project) {
 }
 
 export function create_backgound_orbs() {
-    const group_orbs = new THREE.Group();
-    for (var i = 0; i < 100; i++) {
+    
+    for (var i = 0; i < orb_nubmer; i++) {
 
         const map = new THREE.TextureLoader().load(orb_image);
 
+        var coul_r = 0.5 + 0.5 * Math.random();
+        var coul_g = 0.5 + 0.5 * Math.random();
         var coul_b = 0.5 + 0.5 * Math.random();
         var coul_rv = 0.1 * Math.random();
         const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(coul_rv, coul_rv, coul_b), transparent: true });
 
         //const material = new THREE.SpriteMaterial({ map: map, color: Math.random() * 0x808008 + 0x808080, transparent: true });
         const orb = new THREE.Sprite(material);
-        orb.position.x = Math.random() * 100 - 50;
-        orb.position.y = Math.random() * 30 - 15;
-        orb.position.z = Math.random() * -100 - 50;
+        orb.position.x = Math.random() * 80 - 40;
+        orb.position.y = Math.random() * 40 - 20;
+        orb.position.z = Math.random() * - 100 - 50;
         orb.scale.x = orb.scale.y = Math.random() * 40 - 20;;
         group_orbs.add(orb);
     }
 
     return group_orbs;
-}
-
-export function create_backgound_orbsORG() {
-    const group_orbs = new THREE.Group();
-    for (var i = 0; i < nbr_line; i++) {
-        for (var j = 0; j < nbr_column; j++) {
-            const map = new THREE.TextureLoader().load(orb_image);
-            const material = new THREE.SpriteMaterial({ map: map, color: Math.random() * 0x808008 + 0x808080, transparent: true });
-            const orb = new THREE.Sprite(material);
-            orb.position.x = j * 5 - 20;
-            orb.position.y = i * 5 - 5;
-            orb.position.z = -50;
-            orb.scale.x = orb.scale.y = 25;
-            group_orbs.add(orb);
-        }
-    }
-
-    return group_orbs;
-}
-
-export function animate_orbs(group_orbs) {
-    for (var i = 0; i < group_orbs.children.length; i++) {
-        group_orbs.children[i].position.x += 0.05;
-        if (group_orbs.children[i].position.x > 50) {
-            group_orbs.children[i].position.x = -50;
-        }
-    }
 }
 
 export function get_inter_object(camera, scene) {
@@ -155,5 +140,35 @@ export function onPointerMove(event) {
 
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+}
+
+function change_orb_color(color) {
+    if (animation_orbs_color != null) {
+        if (!animation_orbs_color.isPlaying()) {
+            for(var i = 0; i < group_orbs.children.length; i++){
+                animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: color[0], g: color[1], b: color[2] }, move_time)
+                    .easing(TWEEN.Easing.Quadratic.InOut).start();
+            }
+        }
+    }
+    else {
+        for(var i = 0; i < group_orbs.children.length; i++){
+            animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: color[0], g: color[1], b: color[2] }, move_time)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+        }
+    }
+}
+
+function what_is_project_on(z){
+    for (var i = 0; i < lst_projects.length; i++) {
+        if (z == lst_projects[i].id * 10) {
+            return lst_projects[i];
+        }
+    }
+
+}
+
+function random_color(color){
 
 }
