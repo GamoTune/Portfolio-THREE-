@@ -1,18 +1,16 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { lst_projects } from '../data/lst_projects.js';
-import { group_projects } from './main.js';
 
-var animation_camera = null;
+var animation_camera = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
 const move_time = 1500;
 
-var project_on = null;
+var project_on = 0;
+var project_to = 0;
 
-var pos_x = 3;
-var rota_y = 0;
-var pos_z = 0;
+
 
 var WindowWidth = window.innerWidth;
 var WindowHeight = window.innerHeight;
@@ -27,6 +25,7 @@ var selectedObject = null;
 const pointer = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
+//Fonction pour charger une image en tant que texture de matériau
 export function image_loader(path) {
     // Chargez la texture de l'image
     const loader = new THREE.TextureLoader();
@@ -35,69 +34,54 @@ export function image_loader(path) {
     return new THREE.MeshBasicMaterial({ map: texture });
 }
 
+//Fonction déplacer la caméra
 export function move_camera(camera, distance) {
 
-
-    if (animation_camera != null) {
-
-        if (!animation_camera.isPlaying()) {
-
-            if (distance < 0) {
-                if (camera.position.z > camera_z_max) {
-                    animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z + distance }, move_time)
-                        .easing(TWEEN.Easing.Quadratic.InOut).start();
-                }
-            }
-            else {
-                if (camera.position.z < camera_z_min) {
-                    animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z + distance }, move_time)
-                        .easing(TWEEN.Easing.Quadratic.InOut).start();
-                }
-            }
-        }
-    }
-    else {
-        if (distance < 0) {
-            animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z + distance }, move_time)
+    if (!animation_camera.isPlaying()) {
+        if (camera.position.z + distance <= camera_z_min && camera.position.z + distance >= camera_z_max) {
+            animation_camera = new TWEEN.Tween(camera.position)
+                .to({ z: camera.position.z + distance }, move_time)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
-        }
-        else if (camera.position.z < camera_z_min) {
-            animation_camera = new TWEEN.Tween(camera.position).to({ z: camera.position.z + distance }, move_time)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-        }
-    }
-    if (animation_camera != null) {
-        if (animation_camera.isPlaying()) {
-            project_on = what_is_project_on(camera.position.z, group_projects);
-        }
-        if (project_on != null) {
-            //console.log(project_on.color); // Y A UN BUG ICI AVEC LES COULEURS. En gros, la marche arrière ne marche pas et quand on arrive sur le dernier bah il prend la couleur du premier.
-            change_orb_color(project_on.color);
         }
     }
 }
 
-export function create_projects_cards(project) {
-    if (project.id % 2 == 0) {
-        pos_x = 3;
-        rota_y = -0.5;
+//Fonction pour créer les cartes de projets
+export function create_projects_cards() {
+    const group_projects = new THREE.Group();
+    var pos_x = 3;
+    var rota_y = 0;
+    var pos_z = 0;
+
+    var geometry;
+    var material;
+    var cube;
+
+    for (let i = 0; i < lst_projects.length; i++) {
+        if (lst_projects[i].id % 2 == 0) {
+            pos_x = 3;
+            rota_y = -0.5;
+        }
+        else {
+            pos_x = -3;
+            rota_y = 0.5;
+        }
+        pos_z = lst_projects[i].id * -10;
+        geometry = new THREE.BoxGeometry(3, 1.5, 0);
+        material = image_loader(lst_projects[i].image);
+        cube = new THREE.Mesh(geometry, material);
+        cube.position.z = pos_z;
+        cube.rotation.y = rota_y;
+        cube.position.x = pos_x;
+        cube.name = lst_projects[i].name;
+        cube.id_project = lst_projects[i].id;
+        group_projects.add(cube);
     }
-    else {
-        pos_x = -3;
-        rota_y = 0.5;
-    }
-    pos_z = project.id * -10;
-    const geometry = new THREE.BoxGeometry(3, 1.5, 0);
-    const material = image_loader(project.image);
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.z = pos_z;
-    cube.rotation.y = rota_y;
-    cube.position.x = pos_x;
-    cube.name = "project";
-    cube.id_project = project.id;
-    return cube;
+    console.log(group_projects);
+    return group_projects;
 }
 
+//Fonction pour créer les orbes de fond
 export function create_backgound_orbs() {
 
     for (var i = 0; i < orb_number; i++) {
@@ -121,16 +105,16 @@ export function create_backgound_orbs() {
     return group_orbs;
 }
 
+//Fonction pour savoir quel objet est sélectionné par le pointeur
 export function get_inter_object(camera, scene) {
     // update the picking ray with the camera and pointer position
     raycaster.setFromCamera(pointer, camera);
 
     // calculate objects intersecting the picking ray
-    const intersects = raycaster.intersectObjects(scene.children);
+    const intersects = raycaster.intersectObjects(scene.children)
     if (intersects.length > 0) {
-        if (intersects[0].object.name == "project") {
+        if ("id_project" in intersects[0].object) {
             selectedObject = intersects[0].object;
-          //  console.log('id_projet : ' + selectedObject.id_project);
         } else {
             selectedObject = null;
         }
@@ -138,6 +122,7 @@ export function get_inter_object(camera, scene) {
     return selectedObject;
 }
 
+//Fonction calculer les coordonnées du pointeur
 export function onPointerMove(event) {
 
     // calculate pointer position in normalized device coordinates
@@ -148,6 +133,7 @@ export function onPointerMove(event) {
 
 }
 
+//Fonction pour changer la couleur des orbes
 function change_orb_color(color) {
 
     var coul_r = [], coul_b = [], coul_g = [];
@@ -156,7 +142,6 @@ function change_orb_color(color) {
         coul_g.push(color[1] * Math.random());
         coul_b.push(color[2] * Math.random());
     }
-  
 
     if (!animation_orbs_color.isPlaying()) {
         for (var i = 0; i < group_orbs.children.length; i++) {
@@ -165,19 +150,5 @@ function change_orb_color(color) {
         }
     }
     
-
-}
-
-function what_is_project_on(z) {
-    console.log("Camera Z : " + z);
-    for (var i = 0; i < lst_projects.length; i++) {
-        
-        if (z/10 == lst_projects[i].id) {
-            
-            return lst_projects[i];
-        }
-    }
-
-
 
 }

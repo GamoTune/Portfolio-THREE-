@@ -9,8 +9,6 @@ import {
     onPointerMove
 } from './custom_function.js';
 
-import { lst_projects } from '../data/lst_projects.js';
-
 
 
 //------------------ Create scene ------------------//
@@ -33,14 +31,8 @@ camera.updateProjectionMatrix();
 scene.add(new THREE.AmbientLight(0xffffff));
 
 
-//------------------ Create cube ------------------//
-export const group_projects = new THREE.Group();
-
-for (var i = 0; i < lst_projects.length; i++) {
-    group_projects.add(create_projects_cards(lst_projects[i]));
-}
-
-scene.add(group_projects);
+//------------------ Create Projects Cards ------------------//
+scene.add(create_projects_cards());
 
 
 //------------------ Create Sprite ------------------//
@@ -56,7 +48,7 @@ function animate() {
 
 
 //------------------ Render ------------------//
-var selectedObject = null;
+var selectedObject;
 function render() {
     selectedObject = get_inter_object(camera,scene);
     renderer.render(scene, camera)
@@ -71,13 +63,6 @@ function check_window_ratio() {
 }
 
 //------------------ Mouse ------------------//
-
-
-
-
-
-
-
 window.addEventListener('pointermove', onPointerMove);
 
 window.addEventListener('click', function (event) {
@@ -112,7 +97,5 @@ addEventListener('mousewheel', function (event) {
 });
 
 
-
-
-
+//------------------ Start ------------------//
 animate();

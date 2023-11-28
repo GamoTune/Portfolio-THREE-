@@ -1,7 +1,7 @@
 export const lst_projects = [
     {
         id: 0,
-        title: "Electro Cube Adventure",
+        name: "Electro Cube Adventure",
         description: "Description du projet 1",
         image: "../img/ECA.png",
         color: [1,0,0],//[0.3, 0.3, 0.3],
@@ -9,7 +9,7 @@ export const lst_projects = [
     },
     {
         id: 1,
-        title: "Team Chimu's Website",
+        name: "Team Chimu's Website",
         description: "Description du projet 2",
         image: "../img/Chimu_website.png",
         color: [0,1,0],//[1, 0.5, 0.1],
@@ -17,7 +17,7 @@ export const lst_projects = [
     },
     {
         id: 2,
-        title: "AfterLife",
+        name: "AfterLife",
         description: "Description du projet 3",
         image: "../img/AfterLife.png",
         color: [0,0,1],//[0.0, 0.0, 1],
