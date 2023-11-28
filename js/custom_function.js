@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { lst_projects } from '../data/lst_projects.js';
+import { group_projects } from './main.js';
 
 var animation_camera = null;
 var camera_z_min = 10;
@@ -18,7 +19,7 @@ var WindowHeight = window.innerHeight;
 
 const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
-const orb_nubmer = 150;
+const orb_number = 150;
 var animation_orbs_color = null;
 
 var selectedObject = null;
@@ -66,10 +67,10 @@ export function move_camera(camera, distance) {
     }
     if (animation_camera != null) {
         if (animation_camera.isPlaying()) {
-            project_on = what_is_project_on(camera.position.z);
+            project_on = what_is_project_on(camera.position.z, group_projects);
         }
         if (project_on != null) {
-            console.log(project_on.color); // Y A UN BUG ICI AVEC LES COULEURS. En gros, la marche arrière ne marche pas et quand on arrive sur le dernier bah il prend la couleur du premier.
+            //console.log(project_on.color); // Y A UN BUG ICI AVEC LES COULEURS. En gros, la marche arrière ne marche pas et quand on arrive sur le dernier bah il prend la couleur du premier.
             change_orb_color(project_on.color);
         }
     }
@@ -97,7 +98,7 @@ export function create_projects_cards(project) {
 
 export function create_backgound_orbs() {
 
-    for (var i = 0; i < orb_nubmer; i++) {
+    for (var i = 0; i < orb_number; i++) {
 
         const map = new THREE.TextureLoader().load(orb_image);
 
@@ -170,14 +171,15 @@ function change_orb_color(color) {
 }
 
 function what_is_project_on(z) {
-    for (var i = 0; i < lst_projects.length; i++) {
-        if (z == lst_projects[i].id * 10) {
+    for (var i = 0; i < group_projects.children.length; i++) {
+        
+        if (z - 10 == group_projects.children[i].position.z) {
+            console.log("camera z : ",z)
+            console.log("project z : ", group_projects.children[i].position.z-10)
             return lst_projects[i];
         }
     }
 
-}
 
-function random_color(color) {
 
 }

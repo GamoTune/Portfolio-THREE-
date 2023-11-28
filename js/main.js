@@ -34,13 +34,13 @@ scene.add(new THREE.AmbientLight(0xffffff));
 
 
 //------------------ Create cube ------------------//
-const group = new THREE.Group();
+export const group_projects = new THREE.Group();
 
 for (var i = 0; i < lst_projects.length; i++) {
-    group.add(create_projects_cards(lst_projects[i]));
+    group_projects.add(create_projects_cards(lst_projects[i]));
 }
 
-scene.add(group);
+scene.add(group_projects);
 
 
 //------------------ Create Sprite ------------------//
