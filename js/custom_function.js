@@ -7,10 +7,7 @@ var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
 const move_time = 1500;
 
-var project_on = 0;
-var project_to = 0;
-
-
+var project_on_id = 0;
 
 var WindowWidth = window.innerWidth;
 var WindowHeight = window.innerHeight;
@@ -18,7 +15,6 @@ var WindowHeight = window.innerHeight;
 const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
 const orb_number = 150;
-//var animation_orbs_color = null;
 var animation_orbs_color = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 
 var selectedObject = null;
@@ -42,6 +38,8 @@ export function move_camera(camera, distance) {
             animation_camera = new TWEEN.Tween(camera.position)
                 .to({ z: camera.position.z + distance }, move_time)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
+            project_on_id += distance / -10;
+            change_orb_color(lst_projects[project_on_id].color);
         }
     }
 }
@@ -77,7 +75,6 @@ export function create_projects_cards() {
         cube.id_project = lst_projects[i].id;
         group_projects.add(cube);
     }
-    console.log(group_projects);
     return group_projects;
 }
 
