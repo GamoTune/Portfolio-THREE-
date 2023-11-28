@@ -82,7 +82,6 @@ window.addEventListener('pointermove', onPointerMove);
 
 window.addEventListener('click', function (event) {
     if (selectedObject != null) {
-        console.log(selectedObject.position.z);
         move_camera(camera, selectedObject.position.z-camera.position.z+10);
     }
     

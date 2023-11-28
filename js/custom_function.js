@@ -171,11 +171,11 @@ function change_orb_color(color) {
 }
 
 function what_is_project_on(z) {
-    for (var i = 0; i < group_projects.children.length; i++) {
+    console.log("Camera Z : " + z);
+    for (var i = 0; i < lst_projects.length; i++) {
         
-        if (z - 10 == group_projects.children[i].position.z) {
-            console.log("camera z : ",z)
-            console.log("project z : ", group_projects.children[i].position.z-10)
+        if (z/10 == lst_projects[i].id) {
+            
             return lst_projects[i];
         }
     }
