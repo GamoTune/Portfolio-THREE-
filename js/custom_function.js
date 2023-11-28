@@ -20,7 +20,8 @@ var WindowHeight = window.innerHeight;
 const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
 const orb_number = 150;
-var animation_orbs_color = null;
+//var animation_orbs_color = null;
+var animation_orbs_color = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 
 var selectedObject = null;
 const pointer = new THREE.Vector2();
@@ -92,7 +93,8 @@ export function create_projects_cards(project) {
     cube.position.z = pos_z;
     cube.rotation.y = rota_y;
     cube.position.x = pos_x;
-    cube.name = "project"
+    cube.name = "project";
+    cube.id_project = project.id;
     return cube;
 }
 
@@ -128,6 +130,7 @@ export function get_inter_object(camera, scene) {
     if (intersects.length > 0) {
         if (intersects[0].object.name == "project") {
             selectedObject = intersects[0].object;
+          //  console.log('id_projet : ' + selectedObject.id_project);
         } else {
             selectedObject = null;
         }
@@ -153,21 +156,16 @@ function change_orb_color(color) {
         coul_g.push(color[1] * Math.random());
         coul_b.push(color[2] * Math.random());
     }
+  
 
-    if (animation_orbs_color != null) {
-        if (!animation_orbs_color.isPlaying()) {
-            for (var i = 0; i < group_orbs.children.length; i++) {
-                animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time)
-                    .easing(TWEEN.Easing.Quadratic.InOut).start();
-            }
-        }
-    }
-    else {
+    if (!animation_orbs_color.isPlaying()) {
         for (var i = 0; i < group_orbs.children.length; i++) {
             animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
+    
+
 }
 
 function what_is_project_on(z) {
