@@ -1,2 +1,3 @@
 1/ Ajouter les information des projets
 2/ Trouver un moyen d'avoir des images avec de bonnes couleur (en Texture sur objet 3D)
+3/ Animé les orbs en fond
