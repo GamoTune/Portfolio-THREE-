@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { lst_projects } from '../data/lst_projects.js';
 
+
 var animation_camera = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
-const move_time = 1500;
+const move_time_camera = 1500;
 
 var project_on_id = 0;
 
@@ -22,6 +23,8 @@ const pointer = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
 var animation_projet_card = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
+var shift_card = null;
+const move_time_card = 500;
 
 //Fonction pour charger une image en tant que texture de matériau
 export function image_loader(path) {
@@ -38,7 +41,7 @@ export function move_camera(camera, distance) {
     if (!animation_camera.isPlaying()) {
         if (camera.position.z + distance <= camera_z_min && camera.position.z + distance >= camera_z_max) {
             animation_camera = new TWEEN.Tween(camera.position)
-                .to({ z: camera.position.z + distance }, move_time)
+                .to({ z: camera.position.z + distance }, move_time_camera)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
             project_on_id += distance / -10;
             change_orb_color(lst_projects[project_on_id].color);
@@ -118,22 +121,24 @@ export function get_inter_object(camera, scene) {
     if (intersects.length > 0) {
         if ("id_project" in intersects[0].object) {
             selectedObject = intersects[0].object;
+
         } else {
             selectedObject = null;
         }
     }
     return selectedObject;
-}
+    
 
+}
 //Fonction calculer les coordonnées du pointeur
+
 export function onPointerMove(event) {
 
     // calculate pointer position in normalized device coordinates
     // (-1 to +1) for both components
 
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    show_project_info(selectedObject)
+    pointer.x = (event.clientX / WindowWidth) * 2 - 1;
+    pointer.y = - (event.clientY / WindowHeight) * 2 + 1;
 
 }
 
@@ -149,7 +154,7 @@ function change_orb_color(color) {
 
     if (!animation_orbs_color.isPlaying()) {
         for (var i = 0; i < group_orbs.children.length; i++) {
-            animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time)
+            animation_orbs_color = new TWEEN.Tween(group_orbs.children[i].material.color).to({ r: coul_r[i], g: coul_g[i], b: coul_b[i] }, move_time_camera)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
@@ -157,43 +162,30 @@ function change_orb_color(color) {
 
 }
 
-function show_project_info(project) {
+export function show_project_info(project) {
     //project est l'object threejs
     if (project != null) {
         if (project.id_project == project_on_id) {
-            if (!animation_projet_card.isPlaying()) {
-                if (project.org_x == project.position.x) {
-                    if (project.org_x >= 0) {
-                        animation_projet_card = new TWEEN.Tween(project.position)
-                            .to({ x: project.position.x - 2, z: project.position.z - 2 }, move_time)
-                            .easing(TWEEN.Easing.Quadratic.InOut).start();
-                    }
-                    else {
-                        animation_projet_card = new TWEEN.Tween(project.position)
-                            .to({ x: project.position.x + 2, z: project.position.z - 2 }, move_time)
-                            .easing(TWEEN.Easing.Quadratic.InOut).start();
-                    }
+            if (project.org_x == project.position.x) {
+                if (project.org_x >= 0) {
+                    animation_projet_card = new TWEEN.Tween(project.position)
+                        .to({ x: project.position.x - 1, z: project.position.z + 2 }, move_time_card)
+                        .easing(TWEEN.Easing.Quadratic.InOut).start();
                     
                 }
+                else {
+                    animation_projet_card = new TWEEN.Tween(project.position)
+                        .to({ x: project.position.x + 1, z: project.position.z + 2 }, move_time_card)
+                        .easing(TWEEN.Easing.Quadratic.InOut).start();
+                }
+                shift_card = project;
             }
         }
     }
-    else if(){
-        if (project.id_project == project_on_id) {
-            if (!animation_projet_card.isPlaying()) {
-                if (project.org_x == project.position.x) {
-                    if (project.org_x >= 0) {
-                        animation_projet_card = new TWEEN.Tween(project.position)
-                            .to({ x: project.position.x + 2, z: project.position.z + 2 }, move_time)
-                            .easing(TWEEN.Easing.Quadratic.InOut).start();
-                    }
-                    else {
-                        animation_projet_card = new TWEEN.Tween(project.position)
-                            .to({ x: project.position.x -2 , z: project.position.z + 2 }, move_time)
-                            .easing(TWEEN.Easing.Quadratic.InOut).start();
-                    }
-                }
-            }
-        }
+    else if (shift_card != null) {
+        animation_projet_card = new TWEEN.Tween(shift_card.position)
+            .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
+            .easing(TWEEN.Easing.Quadratic.InOut).start();
+        shift_card = null;
     }
 }

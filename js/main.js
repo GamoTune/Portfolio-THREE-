@@ -6,7 +6,8 @@ import {
     create_projects_cards,
     create_backgound_orbs,
     get_inter_object,
-    onPointerMove
+    onPointerMove,
+    show_project_info,
 } from './custom_function.js';
 
 
@@ -51,6 +52,7 @@ function animate() {
 var selectedObject;
 function render() {
     selectedObject = get_inter_object(camera,scene);
+    show_project_info(selectedObject)
     renderer.render(scene, camera)
 }
 
