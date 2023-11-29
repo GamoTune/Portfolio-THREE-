@@ -10,9 +10,6 @@ const move_time_camera = 1500;
 
 var project_on_id = 0;
 
-var WindowWidth = window.innerWidth;
-var WindowHeight = window.innerHeight;
-
 const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
 const orb_number = 150;
@@ -137,8 +134,8 @@ export function onPointerMove(event) {
     // calculate pointer position in normalized device coordinates
     // (-1 to +1) for both components
 
-    pointer.x = (event.clientX / WindowWidth) * 2 - 1;
-    pointer.y = - (event.clientY / WindowHeight) * 2 + 1;
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
 }
 
