@@ -75,6 +75,10 @@ export function create_projects_cards() {
         cube.position.x = pos_x;
         cube.name = lst_projects[i].name;
         cube.id_project = lst_projects[i].id;
+        cube.org_x = pos_x;
+        cube.org_y = 0;
+        cube.org_z = pos_z;
+
         group_projects.add(cube);
     }
     return group_projects;
@@ -114,7 +118,6 @@ export function get_inter_object(camera, scene) {
     if (intersects.length > 0) {
         if ("id_project" in intersects[0].object) {
             selectedObject = intersects[0].object;
-            show_project_info(selectedObject)
         } else {
             selectedObject = null;
         }
@@ -130,6 +133,7 @@ export function onPointerMove(event) {
 
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    show_project_info(selectedObject)
 
 }
 
@@ -154,5 +158,42 @@ function change_orb_color(color) {
 }
 
 function show_project_info(project) {
-    //project est l'object threej
+    //project est l'object threejs
+    if (project != null) {
+        if (project.id_project == project_on_id) {
+            if (!animation_projet_card.isPlaying()) {
+                if (project.org_x == project.position.x) {
+                    if (project.org_x >= 0) {
+                        animation_projet_card = new TWEEN.Tween(project.position)
+                            .to({ x: project.position.x - 2, z: project.position.z - 2 }, move_time)
+                            .easing(TWEEN.Easing.Quadratic.InOut).start();
+                    }
+                    else {
+                        animation_projet_card = new TWEEN.Tween(project.position)
+                            .to({ x: project.position.x + 2, z: project.position.z - 2 }, move_time)
+                            .easing(TWEEN.Easing.Quadratic.InOut).start();
+                    }
+                    
+                }
+            }
+        }
+    }
+    else if(){
+        if (project.id_project == project_on_id) {
+            if (!animation_projet_card.isPlaying()) {
+                if (project.org_x == project.position.x) {
+                    if (project.org_x >= 0) {
+                        animation_projet_card = new TWEEN.Tween(project.position)
+                            .to({ x: project.position.x + 2, z: project.position.z + 2 }, move_time)
+                            .easing(TWEEN.Easing.Quadratic.InOut).start();
+                    }
+                    else {
+                        animation_projet_card = new TWEEN.Tween(project.position)
+                            .to({ x: project.position.x -2 , z: project.position.z + 2 }, move_time)
+                            .easing(TWEEN.Easing.Quadratic.InOut).start();
+                    }
+                }
+            }
+        }
+    }
 }
