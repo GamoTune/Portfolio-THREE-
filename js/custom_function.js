@@ -21,6 +21,8 @@ var selectedObject = null;
 const pointer = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
+var animation_projet_card = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
+
 //Fonction pour charger une image en tant que texture de matériau
 export function image_loader(path) {
     // Chargez la texture de l'image
@@ -112,6 +114,7 @@ export function get_inter_object(camera, scene) {
     if (intersects.length > 0) {
         if ("id_project" in intersects[0].object) {
             selectedObject = intersects[0].object;
+            show_project_info(selectedObject)
         } else {
             selectedObject = null;
         }
@@ -148,4 +151,8 @@ function change_orb_color(color) {
     }
     
 
+}
+
+function show_project_info(project) {
+    //project est l'object threej
 }
