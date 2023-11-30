@@ -10,7 +10,7 @@ const move_time_camera = 1500;
 
 var project_on_id = 0;
 
-const group_orbs = new THREE.Group();
+export const group_orbs = new THREE.Group();
 const orb_image = '../img/cercle.png';
 const orb_number = 150;
 var animation_orbs_color = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
@@ -101,7 +101,13 @@ export function create_backgound_orbs() {
         orb.position.x = Math.random() * 80 - 40;
         orb.position.y = Math.random() * 40 - 20;
         orb.position.z = Math.random() * - 100 - 50;
-        orb.scale.x = orb.scale.y = Math.random() * 40 - 20;
+        orb.org_x = orb.position.x;
+        orb.org_y = orb.position.y;
+        orb.org_z = orb.position.z;
+       
+        var rayon=Math.random() * 40 - 20;
+        orb.scale.x = orb.scale.y = rayon;
+        orb.vr=20/rayon*0.3;//(Math.random()-0.5)*2;
         group_orbs.add(orb);
     }
 

@@ -8,9 +8,10 @@ import {
     get_inter_object,
     onPointerMove,
     show_project_info,
+    group_orbs
 } from './custom_function.js';
 
-
+var tim=0;
 
 //------------------ Create scene ------------------//
 const scene = new THREE.Scene();
@@ -44,16 +45,25 @@ scene.add(create_backgound_orbs());
 function animate() {
     requestAnimationFrame(animate);
     TWEEN.update();
+
     render();
 }
 
 
 //------------------ Render ------------------//
 var selectedObject;
+var r;
 function render() {
     selectedObject = get_inter_object(camera,scene);
-    show_project_info(selectedObject)
-    renderer.render(scene, camera)
+    show_project_info(selectedObject);
+    group_orbs.children.forEach((element,index) => {
+        r=5*Math.sin(element.vr*tim*0.0007+index);
+        element.position.x=element.org_x+r*Math.cos(element.vr*tim*0.005+index);
+        element.position.y=element.org_y+r*Math.sin(element.vr*tim*0.0057+index);
+    });
+
+    tim++;
+    renderer.render(scene, camera);
 }
 
 
