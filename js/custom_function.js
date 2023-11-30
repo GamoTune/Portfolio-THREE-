@@ -124,7 +124,7 @@ export function get_inter_object(camera, scene) {
         }
     }
     return selectedObject;
-    
+
 
 }
 //Fonction calculer les coordonnées du pointeur
@@ -155,8 +155,6 @@ function change_orb_color(color) {
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
     }
-    
-
 }
 
 export function show_project_info(project) {
@@ -168,7 +166,7 @@ export function show_project_info(project) {
                     animation_projet_card = new TWEEN.Tween(project.position)
                         .to({ x: project.position.x - 1, z: project.position.z + 2 }, move_time_card)
                         .easing(TWEEN.Easing.Quadratic.InOut).start();
-                    
+
                 }
                 else {
                     animation_projet_card = new TWEEN.Tween(project.position)
