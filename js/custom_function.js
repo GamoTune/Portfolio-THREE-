@@ -162,19 +162,11 @@ export function show_project_info(project) {
     if (project != null) {
         if (project.id_project == project_on_id) {
             if (project.org_x == project.position.x) {
-                if (project.org_x >= 0) {
-                    animation_projet_card = new TWEEN.Tween(project.position)
-                        .to({ x: project.position.x - 1, z: project.position.z + 2 }, move_time_card)
-                        .easing(TWEEN.Easing.Quadratic.InOut).start();
-
-                }
-                else {
-                    animation_projet_card = new TWEEN.Tween(project.position)
-                        .to({ x: project.position.x + 1, z: project.position.z + 2 }, move_time_card)
-                        .easing(TWEEN.Easing.Quadratic.InOut).start();
-                }
-                shift_card = project;
+                animation_projet_card = new TWEEN.Tween(project.position)
+                    .to({ x: project.position.x - project.org_x, z: project.position.z + 2 }, move_time_card)
+                    .easing(TWEEN.Easing.Quadratic.InOut).start();
             }
+            shift_card = project;
         }
     }
     else if (shift_card != null) {
