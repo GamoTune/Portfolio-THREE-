@@ -57,7 +57,7 @@ function render() {
     selectedObject = get_inter_object(camera,scene);
     show_project_info(selectedObject);
     group_orbs.children.forEach((element,index) => {
-        r=5*Math.sin(element.vr*tim*0.0007+index);
+        r=2.5*Math.sin(element.vr*tim*0.0007+index);
         element.position.x=element.org_x+r*Math.cos(element.vr*tim*0.005+index);
         element.position.y=element.org_y+r*Math.sin(element.vr*tim*0.0057+index);
     });
