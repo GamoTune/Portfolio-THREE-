@@ -7,11 +7,12 @@ import {
     create_backgound_orbs,
     get_inter_object,
     onPointerMove,
-    show_project_info,
-    group_orbs
+    move_project,
+    group_orbs,
+    move_orbs,
+    show_project_infos,
+    hide_project_infos
 } from './custom_function.js';
-
-var tim=0;
 
 //------------------ Create scene ------------------//
 const scene = new THREE.Scene();
@@ -52,17 +53,11 @@ function animate() {
 
 //------------------ Render ------------------//
 var selectedObject;
-var r;
+
 function render() {
     selectedObject = get_inter_object(camera,scene);
-    show_project_info(selectedObject);
-    group_orbs.children.forEach((element,index) => {
-        r=2.5*Math.sin(element.vr*tim*0.0007+index);
-        element.position.x=element.org_x+r*Math.cos(element.vr*tim*0.005+index);
-        element.position.y=element.org_y+r*Math.sin(element.vr*tim*0.0057+index);
-    });
-
-    tim++;
+    move_project(selectedObject);
+    move_orbs();
     renderer.render(scene, camera);
 }
 
@@ -79,7 +74,8 @@ window.addEventListener('pointermove', onPointerMove);
 
 window.addEventListener('click', function (event) {
     if (selectedObject != null) {
-        move_camera(camera, selectedObject.org_z-camera.position.z+10);
+        //move_camera(camera, selectedObject.org_z-camera.position.z+10);
+        show_project_infos()
     }
     
 });
@@ -108,6 +104,13 @@ addEventListener('mousewheel', function (event) {
     }
 });
 
+
+//------------------ Keyboard ------------------//
+addEventListener('keydown', function (event) {
+    if (event.key == "Escape") {
+        hide_project_infos();
+    }
+});
 
 //------------------ Start ------------------//
 animate();

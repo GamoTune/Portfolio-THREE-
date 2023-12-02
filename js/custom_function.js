@@ -23,6 +23,12 @@ var animation_projet_card = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var shift_card = null;
 const move_time_card = 500;
 
+var tim=0;
+var r;
+
+var animation_project_infos_coords = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
+var big_card = null;
+
 //Fonction pour charger une image en tant que texture de matériau
 export function image_loader(path) {
     // Chargez la texture de l'image
@@ -78,6 +84,7 @@ export function create_projects_cards() {
         cube.org_x = pos_x;
         cube.org_y = 0;
         cube.org_z = pos_z;
+        cube.org_rota_y = rota_y;
 
         group_projects.add(cube);
     }
@@ -163,16 +170,15 @@ function change_orb_color(color) {
     }
 }
 
-export function show_project_info(project) {
-    //project est l'object threejs
-    if (project != null) {
-        if (project.id_project == project_on_id) {
-            if (project.org_x == project.position.x) {
-                animation_projet_card = new TWEEN.Tween(project.position)
-                    .to({ x: project.position.x - (project.org_x / 2), z: project.position.z + 2 }, move_time_card)
+export function move_project() {
+    if (selectedObject != null) {
+        if (selectedObject.id_project == project_on_id) {
+            if (selectedObject.org_x == selectedObject.position.x) {
+                animation_projet_card = new TWEEN.Tween(selectedObject.position)
+                    .to({ x: selectedObject.position.x - (selectedObject.org_x / 2), z: selectedObject.position.z + 2 }, move_time_card)
                     .easing(TWEEN.Easing.Quadratic.InOut).start();
             }
-            shift_card = project;
+            shift_card = selectedObject;
         }
     }
     else if (shift_card != null) {
@@ -180,5 +186,48 @@ export function show_project_info(project) {
             .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
             .easing(TWEEN.Easing.Quadratic.InOut).start();
         shift_card = null;
+    }
+}
+
+export function move_orbs(){
+    group_orbs.children.forEach((element,index) => {
+        r=2.5*Math.sin(element.vr*tim*0.0007+index);
+        element.position.x=element.org_x+r*Math.cos(element.vr*tim*0.005+index);
+        element.position.y=element.org_y+r*Math.sin(element.vr*tim*0.0057+index);
+    });
+    tim++;
+}
+
+export function show_project_infos(){
+    if (shift_card != null) {
+        if (!animation_project_infos_coords.isPlaying()) {
+            animation_project_infos_coords = new TWEEN.Tween(shift_card.position)
+                .to({ x: 0, z: 0 }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            new TWEEN.Tween(shift_card.rotation)
+                .to({ y: 0 }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            new TWEEN.Tween(shift_card.scale)
+                .to({ x: 3, y: 3 }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            big_card=shift_card;
+        }
+    }
+}
+
+export function hide_project_infos(){
+    if (shift_card != null) {
+        if (!animation_project_infos_coords.isPlaying()) {
+            animation_project_infos_coords = new TWEEN.Tween(shift_card.position)
+                .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            new TWEEN.Tween(shift_card.rotation)
+                .to({ y: shift_card.org_rota_y }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            new TWEEN.Tween(shift_card.scale)
+                .to({ x: 1, y: 1 }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
+            big_card=null;
+        }
     }
 }
