@@ -74,8 +74,8 @@ window.addEventListener('pointermove', onPointerMove);
 
 window.addEventListener('click', function (event) {
     if (selectedObject != null) {
-        //move_camera(camera, selectedObject.org_z-camera.position.z+10);
-        show_project_infos()
+        move_camera(camera, selectedObject.org_z-camera.position.z+10);
+        show_project_infos(camera)
     }
     
 });
