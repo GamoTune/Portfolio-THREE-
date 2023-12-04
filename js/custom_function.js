@@ -3,8 +3,6 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { lst_projects } from '../data/lst_projects.js';
 
 
-const loader = new THREE.TextureLoader();
-
 var animation_camera = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
@@ -25,7 +23,7 @@ var animation_projet_card = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var shift_card = null;
 const move_time_card = 500;
 
-var tim=0;
+var tim = 0;
 var r;
 
 var animation_project_infos_coords = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
@@ -34,9 +32,27 @@ var big_card = null;
 //Fonction pour charger une image en tant que texture de matériau
 export function image_loader(path) {
     // Chargez la texture de l'image
+    const loader = new THREE.TextureLoader();
     const texture = loader.load(path);
-    // Créez un matériau avec la texture;
-    return new THREE.MeshBasicMaterial({ map: texture});
+    // Créez un matériau avec la texture
+    return new THREE.MeshBasicMaterial({ map: texture });
+}
+
+function createMaterialArray(project) {
+    const skyboxImagepaths = [
+        project.imageFace,
+        project.imageFace,
+        project.imageFace,
+        project.imageFace,
+        project.imageFace,
+        project.imageDos,
+    ];
+    const materialArray = skyboxImagepaths.map(image => {
+        let texture = new THREE.TextureLoader().load(image);
+
+        return new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide });
+    });
+    return materialArray;
 }
 
 //Fonction déplacer la caméra
@@ -61,9 +77,8 @@ export function create_projects_cards() {
     var pos_z = 0;
 
     var geometry;
-    var material1;
-    var material2;
-    var card;
+    var materials;
+    var cube;
 
     for (let i = 0; i < lst_projects.length; i++) {
         if (lst_projects[i].id % 2 == 0) {
@@ -74,26 +89,21 @@ export function create_projects_cards() {
             pos_x = -3;
             rota_y = 0.5;
         }
-
         pos_z = lst_projects[i].id * -10;
-        geometry = new THREE.PlaneGeometry(3, 1.5);
-        material1 = image_loader(lst_projects[i].imageFace);
-        material2 = image_loader(lst_projects[i].imageDos);
+        geometry = new THREE.BoxGeometry(3, 1.5, 0);
+        materials = createMaterialArray(lst_projects[i])
+        cube = new THREE.Mesh(geometry, materials);
+        cube.position.z = pos_z;
+        cube.rotation.y = rota_y;
+        cube.position.x = pos_x;
+        cube.name = lst_projects[i].name;
+        cube.id_project = lst_projects[i].id;
+        cube.org_x = pos_x;
+        cube.org_y = 0;
+        cube.org_z = pos_z;
+        cube.org_rota_y = rota_y;
 
-        card = new THREE.Mesh(geometry, material1);
-
-        card.position.z = pos_z;
-        card.rotation.y = rota_y;
-        card.position.x = pos_x;
-
-        card.name = lst_projects[i].name;
-        card.id_project = lst_projects[i].id;
-        card.org_x = pos_x;
-        card.org_y = 0;
-        card.org_z = pos_z;
-        card.org_rota_y = rota_y;
-
-        group_projects.add(card);
+        group_projects.add(cube);
     }
     return group_projects;
 }
@@ -118,10 +128,10 @@ export function create_backgound_orbs() {
         orb.org_x = orb.position.x;
         orb.org_y = orb.position.y;
         orb.org_z = orb.position.z;
-       
-        var rayon=Math.random() * 40 - 20;
+
+        var rayon = Math.random() * 40 - 20;
         orb.scale.x = orb.scale.y = rayon;
-        orb.vr=20/rayon*0.3;//(Math.random()-0.5)*2;
+        orb.vr = 20 / rayon * 0.3;//(Math.random()-0.5)*2;
         group_orbs.add(orb);
     }
 
@@ -200,12 +210,12 @@ export function move_project() {
             new TWEEN.Tween(big_card.scale)
                 .to({ x: 1, y: 1 }, move_time_card)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card=null;
+            big_card = null;
         }
-        else{
-        animation_projet_card = new TWEEN.Tween(shift_card.position)
-            .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
-            .easing(TWEEN.Easing.Quadratic.InOut).start();
+        else {
+            animation_projet_card = new TWEEN.Tween(shift_card.position)
+                .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
+                .easing(TWEEN.Easing.Quadratic.InOut).start();
         }
 
 
@@ -213,16 +223,16 @@ export function move_project() {
     }
 }
 
-export function move_orbs(){
-    group_orbs.children.forEach((element,index) => {
-        r=2.5*Math.sin(element.vr*tim*0.0007+index);
-        element.position.x=element.org_x+r*Math.cos(element.vr*tim*0.005+index);
-        element.position.y=element.org_y+r*Math.sin(element.vr*tim*0.0057+index);
+export function move_orbs() {
+    group_orbs.children.forEach((element, index) => {
+        r = 2.5 * Math.sin(element.vr * tim * 0.0007 + index);
+        element.position.x = element.org_x + r * Math.cos(element.vr * tim * 0.005 + index);
+        element.position.y = element.org_y + r * Math.sin(element.vr * tim * 0.0057 + index);
     });
     tim++;
 }
 
-export function show_project_infos(camera){
+export function show_project_infos(camera) {
     if (shift_card != null) {
         if (!animation_project_infos_coords.isPlaying()) {
             animation_project_infos_coords = new TWEEN.Tween(shift_card.position)
@@ -234,12 +244,12 @@ export function show_project_infos(camera){
             new TWEEN.Tween(shift_card.scale)
                 .to({ x: 2, y: 2 }, move_time_card)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card=shift_card;
+            big_card = shift_card;
         }
     }
 }
 
-export function hide_project_infos(){
+export function hide_project_infos() {
     if (big_card != null) {
         if (!animation_project_infos_coords.isPlaying()) {
             animation_project_infos_coords = new TWEEN.Tween(big_card.position)
@@ -251,7 +261,7 @@ export function hide_project_infos(){
             new TWEEN.Tween(big_card.scale)
                 .to({ x: 1, y: 1 }, move_time_card)
                 .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card=null;
+            big_card = null;
         }
     }
 }

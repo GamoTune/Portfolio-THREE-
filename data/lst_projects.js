@@ -4,7 +4,7 @@ export const lst_projects = [
         name: "Electro Cube Adventure",
         description: "Description du projet 1",
         imageFace: "../img/ECA.png",
-        imageDos : "../img/ECA.png",
+        imageDos : "../img/ECA_back.png",
         color: [0.3, 0.3, 0.3],
         link: "https://gamo.one/dl/eca"
     },
