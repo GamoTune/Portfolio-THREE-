@@ -4,6 +4,7 @@ import { lst_projects } from '../data/lst_projects.js';
 
 
 var animation_camera = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
+var animation_camera_rotate = new TWEEN.Tween({ x: 0 }).to({ x: 0 }, 0);
 var camera_z_min = 10;
 var camera_z_max = 10 - 10 * (lst_projects.length - 1);
 const move_time_camera = 1500;
@@ -69,6 +70,16 @@ export function move_camera(camera, distance) {
     }
 }
 
+export function rotate_camera_to(camera, angle) {
+
+    if(!animation_camera_rotate.isPlaying()){
+        animation_camera_rotate = new TWEEN.Tween(camera.rotation)
+        .to({ x: angle }, move_time_camera)
+        .easing(TWEEN.Easing.Quadratic.InOut).start();
+    }
+
+}
+
 //Fonction pour créer les cartes de projets
 export function create_projects_cards() {
     const group_projects = new THREE.Group();
@@ -115,11 +126,7 @@ export function create_backgound_orbs() {
 
         const map = new THREE.TextureLoader().load(orb_image);
 
-        var coul_r = 0.5 + 0.5 * Math.random();
-        var coul_g = 0.5 + 0.5 * Math.random();
-        var coul_b = 0.5 + 0.5 * Math.random();
-        var coul_rv = 0.1 * Math.random();
-        const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(coul_r, 0, coul_b), transparent: true });
+        const material = new THREE.SpriteMaterial({ map: map, color: new THREE.Color(0,0,0), transparent: true });
 
         const orb = new THREE.Sprite(material);
         orb.position.x = Math.random() * 80 - 40;
@@ -134,6 +141,8 @@ export function create_backgound_orbs() {
         orb.vr = 20 / rayon * 0.3;//(Math.random()-0.5)*2;
         group_orbs.add(orb);
     }
+
+    change_orb_color(lst_projects[0].color);
 
     return group_orbs;
 }

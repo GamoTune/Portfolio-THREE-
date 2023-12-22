@@ -3,6 +3,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 
 import {
     move_camera,
+    rotate_camera_to,
     create_projects_cards,
     create_backgound_orbs,
     get_inter_object,
@@ -25,7 +26,7 @@ document.body.appendChild(renderer.domElement);
 //------------------ Create camera ------------------//
 const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 500);
 camera.position.set(0, 0, 0);
-camera.lookAt(0, 0, 0);
+camera.lookAt(0, -1, 0)
 camera.position.z = 10;
 camera.updateProjectionMatrix();
 
@@ -104,11 +105,13 @@ addEventListener('mousewheel', function (event) {
     }
 });
 
-
 //------------------ Keyboard ------------------//
 addEventListener('keydown', function (event) {
     if (event.key == "Escape") {
         hide_project_infos();
+    }
+    if (event.key == " ") {
+        rotate_camera_to(camera, 0)
     }
 });
 
