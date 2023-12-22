@@ -6,7 +6,7 @@ export const lst_projects = [
         imageFace: "../img/ECA.png",
         imageDos : "../img/ECA_back.png",
         color: [0.3, 0.3, 0.3],
-        link: "https://gamo.one/dl/eca"
+        link: "https://gamo.one/eca"
     },
     {
         id: 1,
@@ -33,6 +33,6 @@ export const lst_projects = [
         imageFace: "../img/Portfolio.png",
         imageDos : "../img/Portfolio.png",
         color: [1, 1, 1],
-        link: "https://gamo.one/discord"
+        link: "https://gamo.one"
     },
 ]

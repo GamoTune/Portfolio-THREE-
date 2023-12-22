@@ -12,7 +12,6 @@ import {
     group_orbs,
     move_orbs,
     show_project_infos,
-    hide_project_infos
 } from './custom_function.js';
 
 //------------------ Create scene ------------------//
@@ -107,9 +106,6 @@ addEventListener('mousewheel', function (event) {
 
 //------------------ Keyboard ------------------//
 addEventListener('keydown', function (event) {
-    if (event.key == "Escape") {
-        hide_project_infos();
-    }
     if (event.key == " ") {
         rotate_camera_to(camera, 0)
     }

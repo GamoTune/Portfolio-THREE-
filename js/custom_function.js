@@ -81,6 +81,7 @@ export function rotate_camera_to(camera, angle) {
 }
 
 //Fonction pour créer les cartes de projets
+
 export function create_projects_cards() {
     const group_projects = new THREE.Group();
     var pos_x = 3;
@@ -241,36 +242,6 @@ export function move_orbs() {
     tim++;
 }
 
-export function show_project_infos(camera) {
-    if (shift_card != null) {
-        if (!animation_project_infos_coords.isPlaying()) {
-            animation_project_infos_coords = new TWEEN.Tween(shift_card.position)
-                .to({ x: 0 }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(shift_card.rotation)
-                .to({ y: -Math.PI }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(shift_card.scale)
-                .to({ x: 2, y: 2 }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card = shift_card;
-        }
-    }
-}
-
-export function hide_project_infos() {
-    if (big_card != null) {
-        if (!animation_project_infos_coords.isPlaying()) {
-            animation_project_infos_coords = new TWEEN.Tween(big_card.position)
-                .to({ x: big_card.org_x, z: big_card.org_z }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(big_card.rotation)
-                .to({ y: big_card.org_rota_y }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(big_card.scale)
-                .to({ x: 1, y: 1 }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card = null;
-        }
-    }
+export function show_project_infos() {
+    window.open(lst_projects[project_on_id].link);
 }
