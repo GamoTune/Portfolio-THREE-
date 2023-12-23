@@ -25,7 +25,7 @@ document.body.appendChild(renderer.domElement);
 //------------------ Create camera ------------------//
 const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 500);
 camera.position.set(0, 0, 0);
-camera.lookAt(0, -1, 0)
+camera.lookAt(0, 0, 0)
 camera.position.z = 10;
 camera.updateProjectionMatrix();
 
@@ -75,7 +75,7 @@ window.addEventListener('pointermove', onPointerMove);
 window.addEventListener('click', function (event) {
     if (selectedObject != null) {
         move_camera(camera, selectedObject.org_z-camera.position.z+10);
-        show_project_infos(camera)
+        show_project_infos();
     }
     
 });

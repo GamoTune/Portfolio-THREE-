@@ -210,25 +210,9 @@ export function move_project() {
         }
     }
     else if (shift_card != null && !animation_project_infos_coords.isPlaying()) {
-        if (big_card != null) {
-            animation_project_infos_coords = new TWEEN.Tween(big_card.position)
-                .to({ x: big_card.org_x, z: big_card.org_z }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(big_card.rotation)
-                .to({ y: big_card.org_rota_y }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            new TWEEN.Tween(big_card.scale)
-                .to({ x: 1, y: 1 }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-            big_card = null;
-        }
-        else {
-            animation_projet_card = new TWEEN.Tween(shift_card.position)
-                .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
-                .easing(TWEEN.Easing.Quadratic.InOut).start();
-        }
-
-
+        animation_projet_card = new TWEEN.Tween(shift_card.position)
+            .to({ x: shift_card.org_x, z: shift_card.org_z }, move_time_card)
+            .easing(TWEEN.Easing.Quadratic.InOut).start();
         shift_card = null;
     }
 }
@@ -243,5 +227,7 @@ export function move_orbs() {
 }
 
 export function show_project_infos() {
-    window.open(lst_projects[project_on_id].link);
+    if (shift_card != null) {
+        window.open(lst_projects[project_on_id].link);
+    }
 }
