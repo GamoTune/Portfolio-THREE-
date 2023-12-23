@@ -18,7 +18,8 @@ import {
 //------------------ Create scene ------------------//
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x111111);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialias: true});
+
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);

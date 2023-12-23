@@ -21,8 +21,8 @@ export const lst_projects = [
         id: 2,
         name: "AfterLife",
         description: "Description du projet 3",
-        imageFace: "../img/AfterLife.png",
-        imageDos : "../img/AfterLife.png",
+        imageFace: "../img/AfterLifeTest.png",
+        imageDos : "../img/AfterLife.jpg",
         color: [0.1, 0.1, 0.8],
         link: "https://gamo.one/discord"
     },
