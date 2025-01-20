@@ -128,20 +128,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-node_modules/.vite/deps/_metadata.json
-node_modules/.vite/deps/@tweenjs_tween__js.js.map
-node_modules/.vite/deps/_metadata.json
-node_modules/.vite/deps/three.js
-node_modules/.vite/deps/three.js.map
-node_modules/.vite/
-node_modules/.vite/deps/_metadata.json
-node_modules/.vite/deps/@tweenjs_tween__js.js.map
-node_modules/.vite/deps/_metadata.json
-node_modules/.vite/deps/three.js
-node_modules/.vite/deps/three.js.map
-node_modules/.vite/deps/@tweenjs_tween__js.js
-node_modules/.vite/deps/three.js.map
-node_modules/.vite/deps/three.js
-node_modules/.vite/deps/package.json
-node_modules/.vite/deps/_metadata.json
-node_modules/.vite/deps/@tweenjs_tween__js.js.map
+
+# MacOS
+.DS_Store
